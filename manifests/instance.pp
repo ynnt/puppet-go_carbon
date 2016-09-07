@@ -45,7 +45,7 @@ define go_carbon::instance(
   $group      = $go_carbon::group
 
   # create  data dir
-  file { $whisper_data_dir
+  file { $whisper_data_dir:
     ensure => directory,
     owner  => user,
     group  => group
