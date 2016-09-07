@@ -47,8 +47,8 @@ define go_carbon::instance(
   # create  data dir
   file { $whisper_data_dir:
     ensure => directory,
-    owner  => user,
-    group  => group,
+    owner  => $user,
+    group  => $group,
     before => File["${go_carbon::config_dir}/${service_name}.conf"]
   }
 
