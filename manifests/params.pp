@@ -11,7 +11,7 @@ class go_carbon::params {
     'Debian' => '/usr/sbin/go-carbon',
   }
   $config_dir                         = '/etc/go-carbon'
-  $systemd_service_folder             = '/lib/systemd/system'
+  $systemd_service_folder             = '/etc/systemd/system'
   $service_enable                     = true
   $service_ensure                     = running
   $go_maxprocs                        = 2
