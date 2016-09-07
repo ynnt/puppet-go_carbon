@@ -38,57 +38,19 @@ define go_carbon::instance(
 {
   include go_carbon
 
-  validate_absolute_path($log_file)
-  validate_re($log_level, [ '^debug', '^info', '^warn', '^warning', '^error' ],
-    "Invalid log level ${log_level}, Valid values: 'debug', 'info', 'warn', 'warning', 'error'")
-  validate_string($internal_graph_prefix)
-  validate_string($internal_metrics_interval)
-  validate_integer($max_cpu)
-  validate_absolute_path($whisper_data_dir)
-  validate_integer($whisper_workers)
-  validate_integer($whisper_max_updates_per_second)
-  validate_bool($whisper_enabled)
-  validate_integer($cache_max_size)
-  validate_integer($cache_input_buffer)
-  validate_integer($go_maxprocs)
-  validate_bool($service_enable)
-
-  validate_re($udp_listen, '((?:[0-9]{1,3}\.){3}[0-9]{1,3})?:\d+',
-    "Invalid udp listen ${udp_listen}. Must be {ip}:{port} or just :{port}")
-
-  validate_bool($udp_log_incomplete)
-  validate_bool($udp_enabled)
-  
-  validate_re($tcp_listen, '((?:[0-9]{1,3}\.){3}[0-9]{1,3})?:\d+',
-    "Invalid tcp listen ${tcp_listen}. Must be {ip}:{port} or just :{port}")
-
-  validate_bool($tcp_enabled)
-  
-  validate_re($pickle_listen, '((?:[0-9]{1,3}\.){3}[0-9]{1,3})?:\d+',
-    "Invalid pickle listen ${pickle_listen}. Must be {ip}:{port} or just :{port}")
-
-  validate_integer($pickle_max_message_size)
-  validate_bool($pickle_enabled)
-  
-  validate_re($carbonlink_listen, '((?:[0-9]{1,3}\.){3}[0-9]{1,3})?:\d+',
-    "Invalid carbonlink listen ${carbonlink_listen}. Must be {ip}:{port} or just :{port}")
-
-  validate_bool($carbonlink_enabled)
-  validate_string($carbonlink_read_timeout)
-  validate_string($carbonlink_query_timeout)
-  
-  validate_re($pprof_listen, '((?:[0-9]{1,3}\.){3}[0-9]{1,3})?:\d+',
-    "Invalid pprof listen ${pprof_listen}. Must be {ip}:{port} or just :{port}")
-
-  validate_bool($pprof_enabled)
-  validate_absolute_path($whisper_schemas_file)
-  validate_absolute_path($whisper_aggregation_file)
-
-
   # Put the configuration files
   $executable = $go_carbon::executable
   $config_dir = $go_carbon::config_dir
   $user       = $go_carbon::user
+  $group      = $go_carbon::group
+
+  # create  data dir
+  file { $whisper_data_dir
+    ensure => directory,
+    owner  => user,
+    group  => group
+  } ->
+  go_carbon::service { $service_name: }
 
   file {
     "${go_carbon::config_dir}/${service_name}.conf":
