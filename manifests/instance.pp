@@ -48,9 +48,9 @@ define go_carbon::instance(
   file { $whisper_data_dir:
     ensure => directory,
     owner  => user,
-    group  => group
-  } ->
-  go_carbon::service { $service_name: }
+    group  => group,
+    before => File["${go_carbon::config_dir}/${service_name}.conf"]
+  }
 
   file {
     "${go_carbon::config_dir}/${service_name}.conf":
